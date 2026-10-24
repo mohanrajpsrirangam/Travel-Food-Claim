@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#173b67">
+<title>TA Bill Creator</title>
+<link rel="manifest" href="manifest.json">
+<style>
+:root{--navy:#173b67;--blue:#2563eb;--bg:#f3f6fb;--line:#d8e0eb;--ink:#182230;--muted:#5d6b7c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+header{background:var(--navy);color:white;padding:20px 16px 18px}header h1{font-size:1.35rem;margin:0 0 4px}header p{margin:0;color:#dce8f7;font-size:.9rem}
+main{max-width:850px;margin:16px auto;padding:0 12px 32px}.card{background:white;border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px;box-shadow:0 2px 8px #172b4d08}
+h2{font-size:1.05rem;margin:0 0 14px;color:var(--navy)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:flex;flex-direction:column;gap:5px;min-width:0}.full{grid-column:1/-1}label{font-size:.83rem;font-weight:650;color:#3c4a5c}input,select,textarea{width:100%;font:inherit;padding:11px 10px;border:1px solid #c7d2e0;border-radius:9px;background:#fff;color:var(--ink);min-height:44px}input:focus,select:focus,textarea:focus{outline:2px solid #93c5fd;border-color:var(--blue)}
+.small{font-size:.8rem;color:var(--muted);margin-top:8px}.row-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}.expense{border:1px solid var(--line);border-radius:10px;padding:12px;margin:10px 0}.expense-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr auto;gap:8px;align-items:end}.expense .field label{font-size:.75rem}.btn{border:0;border-radius:10px;padding:11px 14px;font:600 .93rem system-ui;cursor:pointer;min-height:44px}.primary{background:var(--blue);color:#fff}.secondary{background:#e8eef7;color:var(--navy)}.danger{background:#fff0f0;color:#a12323;padding:8px 10px}.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}.actions .wide{grid-column:1/-1}.totalbox{background:#edf5ff;border:1px solid #bfd8fb;border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center;gap:12px}.totalbox strong{font-size:1.35rem;color:var(--navy)}.status{font-size:.85rem;color:#166534;margin-top:8px;min-height:1.2em}
+footer{text-align:center;color:var(--muted);font-size:.78rem;padding:0 14px 24px}
+@media(max-width:560px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.expense-grid{grid-template-columns:1fr 1fr}.expense-grid .desc{grid-column:1/-1}.expense-grid .remove{grid-column:1/-1}.actions{grid-template-columns:1fr 1fr}header{padding-top:17px}}
+@media print{body{background:#fff;font-size:11pt}header{background:#fff!important;color:#000;padding:0 0 12px}header p{color:#333}main{max-width:none;margin:0;padding:0}.card{box-shadow:none;border:1px solid #bbb;break-inside:avoid;padding:12px;margin:0 0 10px}.no-print,.small,.status,footer{display:none!important}input,select,textarea{border:0;border-bottom:1px solid #ddd;border-radius:0;padding:3px;min-height:0;appearance:none;color:#000}.expense{break-inside:avoid}.btn{display:none}.totalbox{background:#fff;border:1px solid #999}.totalbox strong{color:#000}h2{color:#000} }
+</style>
+</head>
+<body>
+<header><h1>TA Bill Creator</h1><p>Central Government Travel Allowance Bill · Mobile-friendly</p></header>
+<main>
+<form id="billForm">
+<section class="card">
+<h2>1. Employee & Bill Details</h2>
+<div class="grid">
+<div class="field"><label for="employee">Employee name *</label><input id="employee" required autocomplete="name" placeholder="Full name"></div>
+<div class="field"><label for="empid">Employee / Staff ID</label><input id="empid" placeholder="Employee ID"></div>
+<div class="field"><label for="designation">Designation</label><input id="designation" placeholder="Designation"></div>
+<div class="field"><label for="office">Office / Department</label><input id="office" placeholder="Office or department"></div>
+<div class="field"><label for="billno">Bill reference number</label><input id="billno" placeholder="Optional"></div>
+<div class="field"><label for="purpose">Purpose of journey *</label><input id="purpose" required placeholder="Official duty / meeting"></div>
+</div>
+</section>
+<section class="card">
+<h2>2. Journey Details</h2>
+<div class="grid">
+<div class="field"><label for="from">Journey from *</label><input id="from" required placeholder="Starting place"></div>
+<div class="field"><label for="to">Journey to *</label><input id="to" required placeholder="Destination"></div>
+<div class="field"><label for="depart">Departure date & time</label><input id="depart" type="datetime-local"></div>
+<div class="field"><label for="return">Return date & time</label><input id="return" type="datetime-local"></div>
+<div class="field"><label for="mode">Mode of travel</label><select id="mode"><option>Train</option><option>Air</option><option>Bus</option><option>Taxi / hired vehicle</option><option>Personal vehicle</option><option>Other</option></select></div>
+<div class="field"><label for="class">Travel class / ticket details</label><input id="class" placeholder="e.g., AC 2 Tier / ticket no."></div>
+<div class="field full"><label for="remarks">Journey remarks</label><textarea id="remarks" rows="2" placeholder="Optional details"></textarea></div>
+</div>
+</section>
+<section class="card">
+<div class="row-head"><h2 style="margin:0">3. Allowances & Other Charges</h2></div>
+<p class="small">Enter amounts approved for your applicable rules. This app does not assume your pay level, entitlement, or official rates.</p>
+<div class="grid">
+<div class="field"><label for="ta">Travel fare (₹)</label><input id="ta" type="number" min="0" step="0.01" value="0"></div>
+<div class="field"><label for="da">Daily allowance / DA (₹)</label><input id="da" type="number" min="0" step="0.01" value="0"></div>
+<div class="field"><label for="local">Local conveyance (₹)</label><input id="local" type="number" min="0" step="0.01" value="0"></div>
+<div class="field"><label for="lodging">Hotel / lodging (₹)</label><input id="lodging" type="number" min="0" step="0.01" value="0"></div>
+<div class="field"><label for="other">Other admissible charges (₹)</label><input id="other" type="number" min="0" step="0.01" value="0"></div>
+<div class="field"><label for="advance">Advance already received (₹)</label><input id="advance" type="number" min="0" step="0.01" value="0"></div>
+</div>
+</section>
+<section class="card">
+<div class="row-head"><h2 style="margin:0">4. Expense Items / Receipts</h2><button type="button" class="btn secondary no-print" id="addExpense">+ Add item</button></div>
+<div id="expenses"></div>
+<p class="small">Use this section for receipt-wise expenses if required. Do not enter the same cost here and in the allowance fields, or it will be counted twice.</p>
+</section>
+<section class="card">
+<h2>5. Bill Summary</h2>
+<div class="grid" style="margin-bottom:14px">
+<div class="field"><label for="claimExtra">Additional receipt expenses total (₹)</label><input id="claimExtra" type="number" min="0" step="0.01" value="0" readonly></div>
+<div class="field"><label for="deductions">Other deductions (₹)</label><input id="deductions" type="number" min="0" step="0.01" value="0"></div>
+</div>
+<div class="totalbox"><div><div style="font-weight:700">Net amount claimed</div><div class="small">Total allowances + receipt items − advance − deductions</div></div><strong id="netTotal">₹0.00</strong></div>
+<div class="small" id="breakdown"></div>
+</section>
+<section class="card">
+<h2>6. Declaration & Signatures</h2>
+<div class="field"><label for="declaration">Declaration</label><textarea id="declaration" rows="3">I certify that the particulars stated above are true and that the expenditure was incurred on official duty, subject to applicable rules and supporting documents.</textarea></div>
+<div class="grid" style="margin-top:12px">
+<div class="field"><label for="place">Place</label><input id="place" placeholder="Place"></div>
+<div class="field"><label for="billdate">Date</label><input id="billdate" type="date"></div>
+</div>
+<p style="margin-top:24px">Employee signature: __________________________</p>
+<p>Controlling Officer / Sanctioning Authority: __________________________</p>
+</section>
+<section class="card no-print">
+<h2>Actions</h2>
+<div class="actions">
+<button type="button" class="btn secondary" id="save">Save draft</button>
+<button type="button" class="btn secondary" id="load">Load saved draft</button>
+<button type="button" class="btn primary wide" id="print">Print / Save as PDF</button>
+<button type="button" class="btn secondary wide" id="clear">Clear form</button>
+</div>
+<div class="status" id="status" role="status"></div>
+<p class="small">Drafts are saved only in this browser on this device. For PDF, choose “Save as PDF” in the print dialog if available.</p>
+</section>
+</form>
+</main>
+<footer>TA Bill Creator · Check all amounts and applicable Central Government TA/DA rules before submission.</footer>
+<script>
+const $ = id => document.getElementById(id);
+const fieldIds = ['employee','empid','designation','office','billno','purpose','from','to','depart','return','mode','class','remarks','ta','da','local','lodging','other','advance','deductions','declaration','place','billdate'];
+const money = n => '₹' + (Number(n)||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
+function addExpense(item={desc:'',amount:'',receipt:''}) {
+ const wrap=document.createElement('div'); wrap.className='expense';
+ wrap.innerHTML=`<div class="expense-grid">
+ <div class="field desc"><label>Expense description</label><input class="ex-desc" placeholder="e.g., taxi receipt"></div>
+ <div class="field"><label>Amount (₹)</label><input class="ex-amount" type="number" min="0" step="0.01" placeholder="0.00"></div>
+ <div class="field"><label>Receipt / reference</label><input class="ex-receipt" placeholder="Receipt no."></div>
+ <button type="button" class="btn danger remove no-print">Remove</button></div>`;
+ wrap.querySelector('.ex-desc').value=item.desc||''; wrap.querySelector('.ex-amount').value=item.amount??''; wrap.querySelector('.ex-receipt').value=item.receipt||'';
+ wrap.querySelectorAll('input').forEach(el=>el.addEventListener('input',calc));
+ wrap.querySelector('.remove').addEventListener('click',()=>{wrap.remove();calc()});
+ $('expenses').appendChild(wrap); calc();
+}
+function expenseData(){return [...document.querySelectorAll('.expense')].map(e=>({desc:e.querySelector('.ex-desc').value,amount:e.querySelector('.ex-amount').value,receipt:e.querySelector('.ex-receipt').value}))}
+function num(id){return Math.max(0,Number($(id).value)||0)}
+function calc(){
+ const extras=expenseData().reduce((s,e)=>s+Math.max(0,Number(e.amount)||0),0);
+ $('claimExtra').value=extras.toFixed(2);
+ const base=['ta','da','local','lodging','other'].reduce((s,id)=>s+num(id),0);
+ const net=base+extras-num('advance')-num('deductions');
+ $('netTotal').textContent=money(net);
+ $('breakdown').textContent=`Allowances and charges: ${money(base)} · Receipt items: ${money(extras)} · Advance: ${money(num('advance'))} · Deductions: ${money(num('deductions'))}`;
+}
+function snapshot(){const fields={};fieldIds.forEach(id=>fields[id]=$(id).value);return {fields,expenses:expenseData()}}
+function apply(data){if(!data||!data.fields)throw new Error('No saved draft found.');fieldIds.forEach(id=>{if(data.fields[id]!==undefined)$(id).value=data.fields[id]});$('expenses').innerHTML='';(data.expenses||[]).forEach(addExpense);calc()}
+$('addExpense').addEventListener('click',()=>addExpense());
+$('save').addEventListener('click',()=>{localStorage.setItem('taBillCreatorDraft',JSON.stringify(snapshot()));$('status').textContent='Draft saved on this device.'});
+$('load').addEventListener('click',()=>{try{apply(JSON.parse(localStorage.getItem('taBillCreatorDraft')));$('status').textContent='Saved draft loaded.'}catch(e){$('status').textContent=e.message}});
+$('clear').addEventListener('click',()=>{if(confirm('Clear all fields? This will not delete the saved draft.')){$('billForm').reset();$('expenses').innerHTML='';addExpense();calc();$('status').textContent='Form cleared.'}});
+$('print').addEventListener('click',()=>{if(!$('billForm').reportValidity())return;calc();window.print()});
+document.querySelectorAll('#billForm input,#billForm select,#billForm textarea').forEach(el=>el.addEventListener('input',calc));
+$('billdate').value=new Date().toISOString().slice(0,10);
+addExpense();
+if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script>
+</body>
+</html>
